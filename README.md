@@ -25,6 +25,14 @@ Follow these steps to get your Laravel app running in Docker.
 
 ### 1. Clone this repository
 
-```bash
+```bash 
 git clone https://github.com/Raman41k/tg-bot.git
 cd tg-bot
+```
+
+### 2. Run the following command to build and start the Docker containers in the background:
+```bash
+docker compose up --build -d
+```
+
+### 3. Start the application and open it in your browser with url http://localhost:8888
