@@ -14,6 +14,7 @@ use Illuminate\Support\Stringable;
 
 class Handler extends WebhookHandler
 {
+    private $LEAVE_AS_IT_WAS = 'Залишити як є';
     public function start()
     {
         $user = $this->message->from();
@@ -264,7 +265,7 @@ class Handler extends WebhookHandler
             ->message("✏️ Введіть нову назву для задачі #{$taskId}:")
             ->replyKeyboard(
                 ReplyKeyboard::make()->buttons([
-                    ReplyButton::make('Залишити як є')
+                    ReplyButton::make($this->LEAVE_AS_IT_WAS)
                 ])->resize()
             )
             ->send();
@@ -278,22 +279,22 @@ class Handler extends WebhookHandler
 
         switch ($step) {
             case 'title':
-                if ($text !== 'Залишити як є' && empty($text)) {
+                if ($text !== $this->LEAVE_AS_IT_WAS && empty($text)) {
                     $this->reply("❌ Назва не може бути пустою. Спробуйте ще раз.");
                     return;
                 }
-                if ($text !== 'Залишити як є') {
+                if ($text !== $this->LEAVE_AS_IT_WAS) {
                     $updates['title'] = $text;
                 }
                 $taskUpdate['step'] = 'description';
                 break;
 
             case 'description':
-                if ($text !== 'Залишити як є' && empty($text)) {
+                if ($text !== $this->LEAVE_AS_IT_WAS && empty($text)) {
                     $this->reply("❌ Опис не може бути пустим. Спробуйте ще раз.");
                     return;
                 }
-                if ($text !== 'Залишити як є') {
+                if ($text !== $this->LEAVE_AS_IT_WAS) {
                     $updates['description'] = $text;
                 }
                 $taskUpdate['step'] = 'status';
@@ -307,7 +308,7 @@ class Handler extends WebhookHandler
                 ];
                 $selected = $statuses[$text] ?? null;
 
-                if ($text !== 'Залишити як є') {
+                if ($text !== $this->LEAVE_AS_IT_WAS) {
                     if ($selected) {
                         $updates['status'] = $selected;
                     } else {
@@ -326,7 +327,7 @@ class Handler extends WebhookHandler
                 ];
                 $selectedPriority = $priorities[$text] ?? null;
 
-                if ($text !== 'Залишити як є') {
+                if ($text !== $this->LEAVE_AS_IT_WAS) {
                     if ($selectedPriority) {
                         $updates['priority'] = $selectedPriority;
                     } else {
@@ -338,12 +339,12 @@ class Handler extends WebhookHandler
                 break;
 
             case 'due_date':
-                if ($text !== '' && $text !== 'Залишити як є') {
+                if ($text !== '' && $text !== $this->LEAVE_AS_IT_WAS) {
                     $date = \DateTime::createFromFormat('Y-m-d', $text);
                     $isValidDate = $date && $date->format('Y-m-d') === $text;
 
                     if (!$isValidDate) {
-                        $this->reply("❌ Будь ласка, введіть дату у форматі РРРР-ММ-ДД або оберіть 'Залишити як є'.");
+                        $this->reply("❌ Будь ласка, введіть дату у форматі РРРР-ММ-ДД або оберіть $this->LEAVE_AS_IT_WAS.");
                         return;
                     }
                     $updates['due_date'] = $text;
@@ -378,7 +379,7 @@ class Handler extends WebhookHandler
                     ->message("✏️ Введіть новий опис для задачі #{$taskId}:")
                     ->replyKeyboard(
                         ReplyKeyboard::make()->buttons([
-                            ReplyButton::make('Залишити як є')
+                            ReplyButton::make($this->LEAVE_AS_IT_WAS)
                         ])->resize()
                     )
                     ->send();
@@ -415,7 +416,7 @@ class Handler extends WebhookHandler
                     ->message("📅 Введіть нову дату завершення для задачі #{$taskId} (формат РРРР-ММ-ДД):")
                     ->replyKeyboard(
                         ReplyKeyboard::make()->buttons([
-                            ReplyButton::make('Залишити як є')
+                            ReplyButton::make($this->LEAVE_AS_IT_WAS)
                         ])->resize()
                     )
                     ->send();
